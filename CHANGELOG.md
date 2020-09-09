@@ -1,3 +1,10 @@
+## [v1.2.0] - 2020-09-08
+
+## Added
+
++ upload images in APP
++ Handle erros global
+
 ## [v1.1.0] - 2020-09-07
 
 ## Added
