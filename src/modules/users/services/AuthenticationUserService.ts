@@ -1,11 +1,12 @@
 import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken'
-import authConfig from '../config/auth';
 
-import AppError from '../errors/AppError';
+import authConfig from '@config/auth';
 
-import User from '../models/User';
+import AppError from '@shared/errors/AppError';
+
+import User from '@modules/users/infra/typeorm/entities/User';
 
 interface RequestDTO {
     email: string;
