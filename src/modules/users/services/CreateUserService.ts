@@ -1,9 +1,9 @@
-import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 
-import User from '@modules/users/infra/typeorm/entities/User';
-
 import AppError from '@shared/errors/AppError';
+import IUsersRepository from '@modules/users/infra/repositories/IUsersRepository';
+
+import User from '@modules/users/infra/typeorm/entities/User';
 
 interface RequestDTO {
     name: string;
@@ -12,12 +12,10 @@ interface RequestDTO {
 }
 
 class CreateUserService {
-    public async execute({ name, email, password }: RequestDTO):Promise<User> {
-        const userRepository = getRepository(User);
+    constructor(private usersRepository: IUsersRepository) {}
 
-        const userCheckExists = await userRepository.findOne({
-            where: { email },
-        });
+    public async execute({ name, email, password }: RequestDTO):Promise<User> {
+        const userCheckExists = await this.usersRepository.findByEmail(email);
 
         if(userCheckExists) {
             throw new AppError('Email address already used.');
@@ -25,13 +23,11 @@ class CreateUserService {
 
         const hashedPassword = await hash(password, 8);
 
-        const user = userRepository.create({
+        const user = await this.usersRepository.create({
             name,
             email,
             password: hashedPassword
         });
-
-        await userRepository.save(user);
 
         return user;
     }
