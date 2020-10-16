@@ -1,6 +1,7 @@
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken'
 import authConfig from '@config/auth';
+import { inject, injectable } from 'tsyringe';
 
 import IUsersRepository from '@modules/users/infra/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
@@ -17,8 +18,12 @@ interface ResponseDTO {
     token: string;
 }
 
+@injectable()
 class AuthenticationUserService {
-    constructor(private usersRepository: IUsersRepository) {}
+    constructor(
+        @inject('UsersRepository')
+        private usersRepository: IUsersRepository
+    ) {}
 
     public async execute({ email, password }: RequestDTO):Promise<ResponseDTO> {
 
