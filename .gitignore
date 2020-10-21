@@ -5,3 +5,4 @@ tmp/*
 !tmp/.gitkeep
 temp/
 .vscode/
+.yarn-error.log
