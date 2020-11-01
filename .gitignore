@@ -6,3 +6,4 @@ tmp/*
 temp/
 .vscode/
 .yarn-error.log
+.idea
