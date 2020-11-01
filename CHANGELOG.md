@@ -1,3 +1,9 @@
+## [v1.3.1] - 2020-11-01
+
+## Changed
+
++ Refactoring automated tests
+
 ## [v1.3.0] - 2020-11-01
 
 ## Added
