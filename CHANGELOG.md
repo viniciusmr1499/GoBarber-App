@@ -1,3 +1,10 @@
+## [v1.3.0] - 2020-11-01
+
+## Added
+
++ sending email
++ Automated testing
+
 ## [v1.2.0] - 2020-09-08
 
 ## Added
