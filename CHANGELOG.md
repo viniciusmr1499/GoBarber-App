@@ -1,3 +1,9 @@
+## [v1.3.2] - 2020-11-02
+
+## Changed
+
++ Correcting dependency injection in updateProfileService
+
 ## [v1.3.1] - 2020-11-01
 
 ## Changed
