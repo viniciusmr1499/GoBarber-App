@@ -13,6 +13,8 @@ export default class ProfileController {
 
         const user = await showProfile.execute({ user_id });
 
+        delete user.password;
+
         return response.json(user);
     }
 
@@ -31,7 +33,7 @@ export default class ProfileController {
             password
         });
 
-        delete user?.password;
+        delete user.password;
 
         return response.json(user);
     }
