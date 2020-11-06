@@ -1,6 +1,5 @@
-import { inject, injectable } from 'tsyringe';
-
-import User from '@modules/users/infra/typeorm/entities/User';
+import { injectable, inject } from 'tsyringe';
+import { getDaysInMonth, getDate } from 'date-fns';
 
 import IApointmentsRepository from '../repositories/IApointmentsRepository';
 
@@ -16,7 +15,7 @@ type IResponse = Array<{
 }>;
 
 @injectable()
-class ListProviderMonthAvailabilityService {
+export default class ListProviderMonthAvailabilityService {
     constructor(
         @inject('AppointmentsRepository')
         private appointmentsRepository: IApointmentsRepository,
@@ -29,8 +28,26 @@ class ListProviderMonthAvailabilityService {
             year,
         })
 
-        return [{ day: 1, available: false }];
+        const numberOfDaysInMonth = getDaysInMonth(new Date(year, month - 1));
+
+        const eachDayArray = Array.from(
+            { length:  numberOfDaysInMonth },
+            (_, index) => index + 1,
+        );
+
+        console.log(eachDayArray)
+
+        const availability = eachDayArray.map(day => {
+            const appointmentsInDay = appointments.filter(appointment => {
+                return getDate(appointment.date) == day;
+            });
+
+            return {
+                day,
+                available: appointmentsInDay.length < 10
+            };
+        });
+
+        return availability;
     }
 }
-
-export default ListProviderMonthAvailabilityService;
