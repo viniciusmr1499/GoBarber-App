@@ -2,7 +2,6 @@ import AppError from '@shared/errors/AppError';
 
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import ShowProfileService from './ShowProfileService';
-import usersRouter from '../infra/http/routes/user.routes';
 
 let fakeUsersRepository: FakeUsersRepository;
 let showProfile: ShowProfileService;
