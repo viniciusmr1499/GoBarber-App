@@ -7,3 +7,4 @@ temp/
 .vscode/
 .yarn-error.log
 .idea
+ormconfig.json
