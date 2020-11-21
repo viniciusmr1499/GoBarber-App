@@ -3,11 +3,9 @@ import AppError from '@shared/errors/AppError';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
 import AuthenticationUserService from './AuthenticationUserService';
-import CreateUserService from './CreateUserService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
-let createUser: CreateUserService;
 let authenticateUser: AuthenticationUserService;
 
 describe('AuthenticationUser', () => {
@@ -15,18 +13,13 @@ describe('AuthenticationUser', () => {
         fakeUsersRepository = new FakeUsersRepository();
         fakeHashProvider = new FakeHashProvider();
 
-        createUser = new CreateUserService(
-            fakeUsersRepository,
-            fakeHashProvider
-        );
-
         authenticateUser = new AuthenticationUserService(
             fakeUsersRepository, fakeHashProvider
         );
     });
 
     it('Should be able to authenticate', async () => {
-        const user = await createUser.execute({
+        const user = await fakeUsersRepository.create({
             name: 'John Doe',
             email: 'johndoe@example.com',
             password: '5151515'
@@ -51,7 +44,7 @@ describe('AuthenticationUser', () => {
     });
 
     it('Should be able to authenticate', async () => {
-        await createUser.execute({
+        await fakeUsersRepository.create({
             name: 'John Doe',
             email: 'johndoe@example.com',
             password: '5151515'
