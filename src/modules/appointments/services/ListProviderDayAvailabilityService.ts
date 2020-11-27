@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import { getHours, isAfter } from 'date-fns';
 
-import IApointmentsRepository from '@modules/appointments/repositories/IApointmentsRepository';
+import IApointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 
 interface IRequest {
     provider_id: string;
