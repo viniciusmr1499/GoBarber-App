@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>53/53</span>
+                <span class='fraction'>63/63</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>53/53</span>
+                <span class='fraction'>63/63</span>
             </div>
         
             
@@ -110,7 +110,23 @@
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -158,6 +174,10 @@
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -166,56 +186,66 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { injectable, inject } from 'tsyringe';
 import { getDaysInMonth, getDate, isAfter } from 'date-fns';
 &nbsp;
-import IApointmentsRepository from '@modules/appointments/repositories/IApointmentsRepository';
+import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 &nbsp;
 interface IRequest {
-    provider_id: string;
-    month: number;
-    year: number;
+  provider_id: string;
+  month: number;
+  year: number;
 }
 &nbsp;
 type IResponse = Array&lt;{
-    day: number;
-    available: boolean;
+  day: number;
+  available: boolean;
 }&gt;;
 &nbsp;
 @injectable()
-export default class ListProviderMonthAvailabilityService {
-    constructor(
-        @inject('AppointmentsRepository')
-        private appointmentsRepository: IApointmentsRepository,
-    ) {}
+class ListProviderMonthAvailabilityService {
+  constructor(
+    @inject('AppointmentsRepository')
+    private appointmentsRepository: IAppointmentsRepository,
+  ) {}
 &nbsp;
-    public async execute({ provider_id, month, year }: IRequest): Promise&lt;IResponse&gt; {
-        const appointments = await this.appointmentsRepository.findAllInMonthFromProvider({
-            month,
-            provider_id,
-            year,
-        });
+  public async execute({
+    provider_id,
+    month,
+    year,
+  }: IRequest): Promise&lt;IResponse&gt; {
+    const appointments = await this.appointmentsRepository.findAllInMonthFromProvider(
+      {
+        provider_id,
+        month,
+        year,
+      },
+    );
 &nbsp;
-        const numberOfDaysInMonth = getDaysInMonth(new Date(year, month - 1));
+    const numberOfDaysInMonth = getDaysInMonth(new Date(year, month - 1));
 &nbsp;
-        const eachDayArray = Array.from(
-            { length:  numberOfDaysInMonth },
-            (_, index) =&gt; index + 1,
-        );
+    const eachDayArray = Array.from(
+      { length: numberOfDaysInMonth },
+      (_, index) =&gt; index + 1,
+    );
 &nbsp;
-        const availability = eachDayArray.map(day =&gt; {
-            const compareDate = new Date(year, month - 1, day, 23, 59, 59);
+    const availability = eachDayArray.map(day =&gt; {
+      const compareDate = new Date(year, month - 1, day, 23, 59, 59);
 &nbsp;
-            const appointmentsInDay = appointments.filter(appointment =&gt; {
-                return getDate(appointment.date) == day;
-            });
+      const appointmentsInDay = appointments.filter(appointment =&gt; {
+        return getDate(appointment.date) === day;
+      });
 &nbsp;
-            return {
-                day,
-                available: isAfter(new Date(), compareDate) &amp;&amp; appointmentsInDay.length &lt; 10
-            };
-        });
+      return {
+        day,
+        available:
+          isAfter(compareDate, new Date(Date.now())) &amp;&amp;
+          appointmentsInDay.length &lt; 10,
+      };
+    });
 &nbsp;
-        return availability;
-    }
-}<span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>
+    return availability;
+  }
+}
+&nbsp;
+export default ListProviderMonthAvailabilityService;<span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -223,7 +253,7 @@ export default class ListProviderMonthAvailabilityService {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Nov 26 2020 21:17:29 GMT-0300 (Brasilia Standard Time)
+                at Thu Dec 03 2020 23:20:37 GMT-0300 (Brasilia Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
