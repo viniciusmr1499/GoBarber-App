@@ -1,3 +1,9 @@
+## [v2.0.1] - 2020-12-17
+
+## Added
+
++ Configuration proccess of deploy
+
 ## [v2.0.0] - 2020-12-15
 
 ## Added
